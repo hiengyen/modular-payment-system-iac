@@ -9,8 +9,9 @@ resource "aws_kinesis_firehose_delivery_stream" "main" {
   extended_s3_configuration {
     role_arn           = aws_iam_role.firehose.arn
     bucket_arn         = "arn:aws:s3:::${var.s3_bucket_name}"
-    buffer_size        = 5
-    buffer_interval    = 300
+    buffering_size     = 5
+    buffering_interval = 300
+    compression_format = "UNCOMPRESSED"
   }
 
   tags = var.tags
@@ -24,8 +25,8 @@ resource "aws_quicksight_data_source" "main" {
 
   parameters {
     aurora_postgresql {
-      host   = var.aurora_endpoint
-      port   = 5432
+      host     = var.aurora_endpoint
+      port     = 5432
       database = "${var.name_prefix}db"
     }
   }

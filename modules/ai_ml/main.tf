@@ -52,6 +52,13 @@ resource "aws_iam_role" "sagemaker" {
   tags = var.tags
 }
 
+# │ Error: "policy" is an empty string, which is not a valid JSON value
+# │
+# │   with module.ai_ml.aws_iam_role_policy.sagemaker_policy,
+# │   on modules/ai_ml/main.tf line 58, in resource "aws_iam_role_policy" "sagemaker_policy":
+# │   58:   policy = file("${path.module}/../../policies/sagemaker_policy.json")
+# │
+
 resource "aws_iam_role_policy" "sagemaker_policy" {
   name   = "${var.name_prefix}-sagemaker-policy"
   role   = aws_iam_role.sagemaker.id

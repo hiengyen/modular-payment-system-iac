@@ -67,7 +67,7 @@ resource "aws_api_gateway_stage" "main" {
   })
 }
 
-resource "aws_api_gateway_web_acl_association" "main" {
-  resource_arn = aws_api_gateway_deployment.main.arn
-  web_acl_arn  = var.waf_acl_arn
+resource "aws_wafv2_web_acl_association" "main" {
+  resource_arn = aws_api_gateway_stage.main.arn
+  web_acl_arn  = aws_wafv2_web_acl.main.arn
 }

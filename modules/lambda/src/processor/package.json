@@ -1,0 +1,12 @@
+{
+  "name": "processor-lambda",
+  "version": "1.0.0",
+  "description": "Processor Lambda function for modular payment system",
+  "main": "index.js",
+  "dependencies": {
+    "aws-sdk": "^2.1410.0"
+  },
+  "scripts": {
+    "zip": "zip -r processor.zip ."
+  }
+}

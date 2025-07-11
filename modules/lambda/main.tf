@@ -3,11 +3,11 @@ provider "aws" {
 }
 
 resource "aws_lambda_function" "router" {
-  function_name = "${var.name_prefix}-router"
-  role          = aws_iam_role.lambda.arn
-  handler       = "index.handler"
-  runtime       = "nodejs18.x"
-  filename      = "${path.module}/src/router/router.zip"
+  function_name    = "${var.name_prefix}-router"
+  role             = aws_iam_role.lambda.arn
+  handler          = "index.handler"
+  runtime          = "nodejs18.x"
+  filename         = "${path.module}/src/router/router.zip"
   source_code_hash = filebase64sha256("${path.module}/src/router/router.zip")
 
   vpc_config {
@@ -28,11 +28,11 @@ resource "aws_lambda_function" "router" {
 }
 
 resource "aws_lambda_function" "processor" {
-  function_name = "${var.name_prefix}-processor"
-  role          = aws_iam_role.lambda.arn
-  handler       = "index.handler"
-  runtime       = "nodejs18.x"
-  filename      = "${path.module}/src/processor/processor.zip"
+  function_name    = "${var.name_prefix}-processor"
+  role             = aws_iam_role.lambda.arn
+  handler          = "index.handler"
+  runtime          = "nodejs18.x"
+  filename         = "${path.module}/src/processor/processor.zip"
   source_code_hash = filebase64sha256("${path.module}/src/processor/processor.zip")
 
   vpc_config {

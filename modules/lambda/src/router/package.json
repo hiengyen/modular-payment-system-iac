@@ -1,0 +1,12 @@
+{
+  "name": "router-lambda",
+  "version": "1.0.0",
+  "description": "Router Lambda function for modular payment system",
+  "main": "index.js",
+  "dependencies": {
+    "aws-sdk": "^2.1410.0"
+  },
+  "scripts": {
+    "zip": "zip -r router.zip ."
+  }
+}
