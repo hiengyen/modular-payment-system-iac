@@ -4,8 +4,8 @@ provider "aws" {
 
 resource "aws_rds_cluster" "aurora" {
   cluster_identifier      = "${var.name_prefix}-aurora-cluster"
-  engine                  = "aurora-postgresql"
-  engine_version          = "13.7"
+  engine                  = "aurora-mysql"
+  engine_version          = "5.7.mysql_aurora.2.03.2"
   database_name           = "${var.name_prefix}db"
   master_username         = var.db_master_username
   master_password         = var.db_master_password
@@ -13,6 +13,7 @@ resource "aws_rds_cluster" "aurora" {
   deletion_protection     = var.enable_deletion_protection
   db_subnet_group_name    = aws_db_subnet_group.main.name
   vpc_security_group_ids  = [aws_security_group.rds.id]
+  preferred_backup_window = "07:00-09:00"
 
   tags = var.tags
 }
@@ -62,9 +63,9 @@ resource "aws_security_group" "rds" {
 }
 
 resource "aws_dynamodb_table" "main" {
-  name           = "${var.name_prefix}-dynamodb-table"
-  billing_mode   = "PAY_PER_REQUEST"
-  hash_key       = "id"
+  name         = "${var.name_prefix}-dynamodb-table"
+  billing_mode = "PAY_PER_REQUEST"
+  hash_key     = "id"
 
   attribute {
     name = "id"
