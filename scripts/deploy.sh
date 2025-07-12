@@ -1,26 +1,51 @@
 #!/bin/bash
 
-# deploy.sh
-# Script to deploy Terraform infrastructure
+set -euo pipefail
 
-set -e
-
-ENVIRONMENT=$1
+ENVIRONMENT="$1"
 
 if [ -z "$ENVIRONMENT" ]; then
-  echo "Error: Environment not specified. Usage: ./deploy.sh [dev|staging|prod]"
+  echo "❌ Error: Environment not specified. Usage: ./deploy.sh [dev|staging|prod]"
   exit 1
 fi
 
-echo "Deploying to $ENVIRONMENT environment..."
+ENV_DIR="environments/$ENVIRONMENT"
+TFVARS_FILE="$ENV_DIR/terraform.tfvars"
 
-# Navigate to environment directory
-cd environments/$ENVIRONMENT
+if [ ! -d "$ENV_DIR" ]; then
+  echo "❌ Error: Environment directory '$ENV_DIR' does not exist."
+  exit 1
+fi
 
-# Initialize Terraform
-terraform init
+if [ ! -f "$TFVARS_FILE" ]; then
+  echo "❌ Error: File '$TFVARS_FILE' not found."
+  exit 1
+fi
 
-# Apply Terraform configuration
-terraform apply -var-file="terraform.tfvars" -auto-approve
+# Log & Plan Backup
+LOG_DIR="logs"
+PLAN_DIR="plans"
+TIMESTAMP=$(date "+%Y%m%d_%H%M%S")
+PLAN_FILE="$PLAN_DIR/tfplan_${ENVIRONMENT}_${TIMESTAMP}"
+LOG_FILE="$LOG_DIR/deploy_${ENVIRONMENT}_${TIMESTAMP}.log"
 
-echo "Deployment to $ENVIRONMENT completed successfully!"
+mkdir -p "$LOG_DIR" "$PLAN_DIR"
+
+echo "🚀 Deploying Terraform for '$ENVIRONMENT'..."
+cd "$ENV_DIR"
+
+# Init Terraform
+terraform init | tee "$OLDPWD/$LOG_FILE"
+
+# Plan & Save
+terraform plan -var-file="terraform.tfvars" -out="tfplan" | tee -a "$OLDPWD/$LOG_FILE"
+
+# Apply
+terraform apply "tfplan" | tee -a "$OLDPWD/$LOG_FILE"
+
+# Backup Plan
+cp tfplan "$OLDPWD/$PLAN_FILE"
+
+cd "$OLDPWD"
+echo ""
+echo "✅ Deployed! Log: $LOG_FILE | Plan Backup: $PLAN_FILE"

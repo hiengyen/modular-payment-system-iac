@@ -1,26 +1,41 @@
 #!/bin/bash
 
-# destroy.sh
-# Script to destroy Terraform infrastructure
+set -euo pipefail
 
-set -e
-
-ENVIRONMENT=$1
+ENVIRONMENT="$1"
 
 if [ -z "$ENVIRONMENT" ]; then
-  echo "Error: Environment not specified. Usage: ./destroy.sh [dev|staging|prod]"
+  echo "❌ Error: Environment not specified. Usage: ./destroy.sh [dev|staging|prod]"
   exit 1
 fi
 
-echo "Destroying $ENVIRONMENT environment..."
+ENV_DIR="environments/$ENVIRONMENT"
+TFVARS_FILE="$ENV_DIR/terraform.tfvars"
 
-# Navigate to environment directory
-cd environments/$ENVIRONMENT
+if [ ! -d "$ENV_DIR" ]; then
+  echo "❌ Error: Environment directory '$ENV_DIR' does not exist."
+  exit 1
+fi
 
-# Initialize Terraform
-terraform init
+if [ ! -f "$TFVARS_FILE" ]; then
+  echo "❌ Error: File '$TFVARS_FILE' not found."
+  exit 1
+fi
 
-# Destroy Terraform configuration
-terraform destroy -var-file="terraform.tfvars" -auto-approve
+# Logging
+LOG_DIR="logs"
+TIMESTAMP=$(date "+%Y%m%d_%H%M%S")
+LOG_FILE="$LOG_DIR/destroy_${ENVIRONMENT}_${TIMESTAMP}.log"
 
-echo "Destruction of $ENVIRONMENT completed successfully!"
+mkdir -p "$LOG_DIR"
+
+echo "🧨 Destroying Terraform resources for '$ENVIRONMENT'..."
+cd "$ENV_DIR"
+
+# Init & Destroy
+terraform init | tee "$OLDPWD/$LOG_FILE"
+terraform destroy -var-file="terraform.tfvars" -auto-approve | tee -a "$OLDPWD/$LOG_FILE"
+
+cd "$OLDPWD"
+echo ""
+echo "✅ Destroyed. Log saved at: $LOG_FILE"

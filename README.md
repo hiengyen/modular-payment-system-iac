@@ -9,8 +9,6 @@ modular-payment-terraform/
 ├── main.tf
 ├── variables.tf
 ├── outputs.tf
-├── locals.tf
-├── data.tf
 ├── modules/
 │   ├── vpc/
 │   │   ├── main.tf
@@ -130,6 +128,10 @@ modular-payment-terraform/
     ├── troubleshooting.md
     └── api_documentation.md
 ```
+## Cách chạy terraform theo từng môi trường: 
+terraform plan -var-file="environments/dev/terraform.tfvars"
+terraform apply -var-file="environments/staging/terraform.tfvars"
+terraform apply -var-file="environments/prod/terraform.tfvars"
 
 ## Mô tả các thành phần chính:
 
@@ -137,8 +139,6 @@ modular-payment-terraform/
 - **main.tf**: File chính gọi các modules
 - **variables.tf**: Định nghĩa biến cho toàn bộ dự án
 - **outputs.tf**: Xuất các giá trị quan trọng
-- **locals.tf**: Định nghĩa local values
-- **data.tf**: Data sources
 - **versions.tf**: Terraform và provider versions
 
 ### 2. Modules Directory
@@ -146,7 +146,6 @@ Mỗi module có cấu trúc chuẩn:
 - **main.tf**: Logic chính của module
 - **variables.tf**: Input variables
 - **outputs.tf**: Output values
-- **versions.tf**: Provider requirements (nếu cần)
 
 ### 3. Environments Directory
 Cấu hình riêng cho từng môi trường:

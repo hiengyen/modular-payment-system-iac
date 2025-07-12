@@ -7,7 +7,6 @@
 
 # Variables
 *.tfvars
-!*.tfvars.example
 
 # OS
 .DS_Store

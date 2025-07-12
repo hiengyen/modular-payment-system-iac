@@ -7,8 +7,6 @@ data "aws_availability_zones" "available" {
   state = "available"
 }
 
-data "aws_caller_identity" "current" {}
-
 # Local variables
 locals {
   name_prefix = var.project_name

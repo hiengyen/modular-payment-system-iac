@@ -1,0 +1,12 @@
+aws_region              = "ap-south-1"
+project_name            = "myproject"
+environment             = "dev"
+vpc_cidr                = "10.0.0.0/16"
+db_master_username      = "admin"
+db_master_password      = "your-secret-password"
+enable_deletion_protection = false
+backup_retention_period = 3
+instance_class          = "db.t3.medium"
+domain_name             = "dev.api.example.com"
+certificate_arn         = "arn:aws:acm:your-cert-arn"
+
