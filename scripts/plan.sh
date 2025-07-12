@@ -34,6 +34,9 @@ LOG_FILE="$LOG_DIR/plan_${ENVIRONMENT}_${TIMESTAMP}.log"
 
 mkdir -p "$LOG_DIR" "$PLAN_DIR"
 
+# Redirect output to log file
+exec > >(tee "$LOG_FILE") 2>&1
+
 echo "🧪 Running Terraform plan for '$ENVIRONMENT'..."
 
 # Initialize Terraform

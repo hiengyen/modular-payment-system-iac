@@ -2,7 +2,7 @@
 
 set -euo pipefail
 
-ENVIRONMENT="$1" # Nhận đối số đầu tiên là môi trường (dev|staging|prod)
+ENVIRONMENT="$1" # Get the environment from the first argument
 
 if [ -z "$ENVIRONMENT" ]; then
   echo "❌ Error: Environment not specified. Usage: ./validate.sh [dev|staging|prod]"
@@ -22,19 +22,22 @@ if [ ! -f "$TFVARS_FILE" ]; then
   exit 1
 fi
 
-# Tạo thư mục lưu log
+# Create logs directory and log file
 LOG_DIR="logs"
 mkdir -p "$LOG_DIR"
 TIMESTAMP=$(date "+%Y%m%d_%H%M%S")
 LOG_FILE="$LOG_DIR/validate_${ENVIRONMENT}_${TIMESTAMP}.log"
+
+# Redirect output to log file
+exec > >(tee "$LOG_FILE") 2>&1
 
 echo "🔍 Validating Terraform configuration for '$ENVIRONMENT'..."
 echo "📝 Log: $LOG_FILE"
 echo ""
 
 # Init và validate
-terraform init -backend=false | tee "$LOG_FILE"
-terraform validate -var-file="$TFVARS_FILE" | tee -a "$LOG_FILE"
+terraform init -backend=false
+terraform validate -var-file="$TFVARS_FILE"
 
 echo ""
 echo "✅ Validation completed for environment: $ENVIRONMENT"

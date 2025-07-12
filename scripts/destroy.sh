@@ -29,6 +29,9 @@ LOG_FILE="$LOG_DIR/destroy_${ENVIRONMENT}_${TIMESTAMP}.log"
 
 mkdir -p "$LOG_DIR"
 
+# Redirect output to log file
+exec > >(tee "$LOG_FILE") 2>&1
+
 echo "🧨 Destroying Terraform resources for '$ENVIRONMENT'..."
 cd "$ENV_DIR"
 

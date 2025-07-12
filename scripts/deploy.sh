@@ -35,13 +35,13 @@ echo "🚀 Deploying Terraform for '$ENVIRONMENT'..."
 cd "$ENV_DIR"
 
 # Init Terraform
-terraform init | tee "$OLDPWD/$LOG_FILE"
+terraform init
 
 # Plan & Save
-terraform plan -var-file="terraform.tfvars" -out="tfplan" | tee -a "$OLDPWD/$LOG_FILE"
+terraform plan -var-file="terraform.tfvars" -out="tfplan"
 
 # Apply
-terraform apply "tfplan" | tee -a "$OLDPWD/$LOG_FILE"
+terraform apply "tfplan"
 
 # Backup Plan
 cp tfplan "$OLDPWD/$PLAN_FILE"

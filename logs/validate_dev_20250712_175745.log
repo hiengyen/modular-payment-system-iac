@@ -1,0 +1,10 @@
+🔎 Validating Terraform for 'dev'...
+[0m[1mTerraform initialized in an empty directory![0m
+
+The directory has no Terraform configuration files. You may begin working
+with Terraform immediately by creating Terraform configuration files.[0m
+[32m[1mSuccess![0m The configuration is valid.
+[0m
+
+✅ Validation complete!
+📄 Log saved to: logs/validate_dev_20250712_175745.log
