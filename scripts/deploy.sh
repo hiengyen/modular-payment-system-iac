@@ -5,13 +5,19 @@ set -euo pipefail
 ENVIRONMENT="$1"
 
 if [ -z "$ENVIRONMENT" ]; then
-  echo "❌ Error: Environment not specified. Usage: ./deploy.sh [dev|staging|prod]"
+  echo "❌ Error: Environment not specified. Usage: ./scripts/deploy.sh [dev|staging|prod]"
   exit 1
 fi
 
 ENV_DIR="environments/$ENVIRONMENT"
 TFVARS_FILE="$ENV_DIR/terraform.tfvars"
+LOG_DIR="logs"
+PLAN_DIR="plans"
+TIMESTAMP=$(date "+%Y%m%d_%H%M%S")
+LOG_FILE="$LOG_DIR/deploy_${ENVIRONMENT}_${TIMESTAMP}.log"
+PLAN_FILE="$PLAN_DIR/tfplan_${ENVIRONMENT}_${TIMESTAMP}"
 
+#
 if [ ! -d "$ENV_DIR" ]; then
   echo "❌ Error: Environment directory '$ENV_DIR' does not exist."
   exit 1
@@ -22,30 +28,22 @@ if [ ! -f "$TFVARS_FILE" ]; then
   exit 1
 fi
 
-# Log & Plan Backup
-LOG_DIR="logs"
-PLAN_DIR="plans"
-TIMESTAMP=$(date "+%Y%m%d_%H%M%S")
-PLAN_FILE="$PLAN_DIR/tfplan_${ENVIRONMENT}_${TIMESTAMP}"
-LOG_FILE="$LOG_DIR/deploy_${ENVIRONMENT}_${TIMESTAMP}.log"
-
 mkdir -p "$LOG_DIR" "$PLAN_DIR"
 
-echo "🚀 Deploying Terraform for '$ENVIRONMENT'..."
-cd "$ENV_DIR"
+#
+exec > >(tee "$LOG_FILE") 2>&1
 
-# Init Terraform
+echo "🚀 Starting Terraform deployment for '$ENVIRONMENT'"
+echo "📄 Using tfvars: $TFVARS_FILE"
+echo "📝 Logging to: $LOG_FILE"
+echo ""
+
 terraform init
 
-# Plan & Save
-terraform plan -var-file="terraform.tfvars" -out="tfplan"
+terraform plan -var-file="$TFVARS_FILE" -out="$PLAN_FILE"
+terraform apply "$PLAN_FILE"
 
-# Apply
-terraform apply "tfplan"
-
-# Backup Plan
-cp tfplan "$OLDPWD/$PLAN_FILE"
-
-cd "$OLDPWD"
 echo ""
-echo "✅ Deployed! Log: $LOG_FILE | Plan Backup: $PLAN_FILE"
+echo "✅ Deployment complete!"
+echo "📦 Plan saved to: $PLAN_FILE"
+echo "📝 Log saved to: $LOG_FILE"

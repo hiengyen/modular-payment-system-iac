@@ -5,7 +5,7 @@ provider "aws" {
 resource "aws_rds_cluster" "aurora" {
   cluster_identifier      = "${var.name_prefix}-aurora-cluster"
   engine                  = "aurora-mysql"
-  engine_version          = "5.7.mysql_aurora.2.03.2"
+  engine_version          = "8.0.mysql_aurora.3.08.0"
   database_name           = "${var.name_prefix}db"
   master_username         = var.db_master_username
   master_password         = var.db_master_password
@@ -14,8 +14,7 @@ resource "aws_rds_cluster" "aurora" {
   db_subnet_group_name    = aws_db_subnet_group.main.name
   vpc_security_group_ids  = [aws_security_group.rds.id]
   preferred_backup_window = "07:00-09:00"
-
-  tags = var.tags
+  tags                    = var.tags
 }
 
 resource "aws_rds_cluster_instance" "aurora_instance" {
@@ -25,15 +24,13 @@ resource "aws_rds_cluster_instance" "aurora_instance" {
   instance_class     = var.instance_class
   engine             = aws_rds_cluster.aurora.engine
   engine_version     = aws_rds_cluster.aurora.engine_version
-
-  tags = var.tags
+  tags               = var.tags
 }
 
 resource "aws_db_subnet_group" "main" {
   name       = "${var.name_prefix}-db-subnet-group"
   subnet_ids = var.private_subnet_ids
-
-  tags = var.tags
+  tags       = var.tags
 }
 
 resource "aws_security_group" "rds" {
