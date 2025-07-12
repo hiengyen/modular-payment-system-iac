@@ -109,8 +109,8 @@ module "ecs" {
 
 # Lambda
 module "lambda" {
-  source              = "./modules/lambda"
   name_prefix         = local.name_prefix
+  source              = "./modules/lambda"
   vpc_id              = module.vpc.vpc_id
   private_subnet_ids  = module.vpc.private_subnet_ids
   security_group_ids  = [module.security.lambda_sg_id]
@@ -119,6 +119,7 @@ module "lambda" {
   aurora_endpoint     = module.database.aurora_cluster_endpoint
   dynamodb_table_name = module.database.dynamodb_table_name
   tags                = local.common_tags
+  lambda_policy_arn   = module.lambda.lambda_policy_arn
   aws_region          = var.aws_region
 
 }

@@ -21,7 +21,7 @@ resource "aws_iam_role" "processor_lambda_role" {
 # Attaching IAM policy to processor_lambda_role
 resource "aws_iam_role_policy_attachment" "processor_lambda_policy" {
   role       = aws_iam_role.processor_lambda_role.name
-  policy_arn = aws_iam_policy.lambda_policy.arn
+  policy_arn = var.lambda_policy_arn
 }
 
 # Defining Lambda function for processing

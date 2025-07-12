@@ -37,7 +37,7 @@ echo ""
 
 # Init và validate
 terraform init -backend=false
-terraform validate -var-file="$TFVARS_FILE"
+terraform validate
 
 echo ""
 echo "✅ Validation completed for environment: $ENVIRONMENT"

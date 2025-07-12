@@ -36,8 +36,8 @@ echo "🧨 Destroying Terraform resources for '$ENVIRONMENT'..."
 cd "$ENV_DIR"
 
 # Init & Destroy
-terraform init | tee "$OLDPWD/$LOG_FILE"
-terraform destroy -var-file="terraform.tfvars" -auto-approve | tee -a "$OLDPWD/$LOG_FILE"
+terraform init
+terraform destroy -var-file="terraform.tfvars" -auto-approve
 
 cd "$OLDPWD"
 echo ""

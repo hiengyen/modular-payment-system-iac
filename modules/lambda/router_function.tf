@@ -21,7 +21,7 @@ resource "aws_iam_role" "router_lambda_role" {
 # Attaching IAM policy to router_lambda_role
 resource "aws_iam_role_policy_attachment" "router_lambda_policy" {
   role       = aws_iam_role.router_lambda_role.name
-  policy_arn = aws_iam_policy.lambda_policy.arn
+  policy_arn = var.lambda_policy_arn
 }
 
 # Defining Lambda function for routing
@@ -61,8 +61,3 @@ resource "aws_cloudwatch_log_group" "router_lambda_log_group" {
   tags              = var.tags
 }
 
-# Output for router_function ARN
-output "router_function_arn" {
-  description = "ARN of the router Lambda function"
-  value       = aws_lambda_function.router.arn
-}

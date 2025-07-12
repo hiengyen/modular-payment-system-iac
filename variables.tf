@@ -53,6 +53,11 @@ variable "instance_class" {
   default     = "db.r6g.large"
 }
 
+variable "lambda_policy_arn" {
+  description = "ARN of the custom Lambda IAM policy"
+  type        = string
+}
+
 variable "domain_name" {
   description = "Domain name for the API"
   type        = string

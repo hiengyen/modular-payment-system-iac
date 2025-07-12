@@ -22,3 +22,6 @@ Thumbs.db
 
 # zip files
 *.zip
+
+# Logs
+logs/
