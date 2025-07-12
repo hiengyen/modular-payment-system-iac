@@ -14,44 +14,30 @@ modular-payment-terraform/
 │   │   ├── main.tf
 │   │   ├── variables.tf
 │   │   ├── outputs.tf
-│   │   └── versions.tf
 │   ├── security/
 │   │   ├── main.tf
 │   │   ├── variables.tf
 │   │   ├── outputs.tf
-│   │   ├── waf.tf
-│   │   ├── security_groups.tf
-│   │   └── iam_roles.tf
 │   ├── cognito/
 │   │   ├── main.tf
 │   │   ├── variables.tf
 │   │   ├── outputs.tf
-│   │   └── user_pool.tf
 │   ├── s3/
 │   │   ├── main.tf
 │   │   ├── variables.tf
 │   │   ├── outputs.tf
-│   │   └── buckets.tf
 │   ├── database/
 │   │   ├── main.tf
 │   │   ├── variables.tf
 │   │   ├── outputs.tf
-│   │   ├── aurora.tf
-│   │   ├── dynamodb.tf
-│   │   └── iam_roles.tf
 │   ├── ecr/
 │   │   ├── main.tf
 │   │   ├── variables.tf
 │   │   ├── outputs.tf
-│   │   └── repositories.tf
 │   ├── ecs/
 │   │   ├── main.tf
 │   │   ├── variables.tf
 │   │   ├── outputs.tf
-│   │   ├── cluster.tf
-│   │   ├── task_definition.tf
-│   │   ├── service.tf
-│   │   └── alb.tf
 │   ├── lambda/
 │   │   ├── main.tf
 │   │   ├── variables.tf
@@ -69,49 +55,29 @@ modular-payment-terraform/
 │   │   ├── main.tf
 │   │   ├── variables.tf
 │   │   ├── outputs.tf
-│   │   ├── rest_api.tf
-│   │   ├── resources.tf
-│   │   └── deployment.tf
 │   ├── messaging/
 │   │   ├── main.tf
 │   │   ├── variables.tf
 │   │   ├── outputs.tf
-│   │   ├── sqs.tf
-│   │   └── sns.tf
 │   ├── analytics/
 │   │   ├── main.tf
 │   │   ├── variables.tf
 │   │   ├── outputs.tf
-│   │   ├── kinesis_firehose.tf
-│   │   └── quicksight.tf
 │   ├── ai_ml/
 │   │   ├── main.tf
 │   │   ├── variables.tf
 │   │   ├── outputs.tf
-│   │   ├── sagemaker.tf
-│   │   └── bedrock.tf
 │   └── monitoring/
 │       ├── main.tf
 │       ├── variables.tf
 │       ├── outputs.tf
-│       ├── cloudwatch.tf
-│       └── dashboards.tf
 ├── environments/
 │   ├── dev/
-│   │   ├── main.tf
-│   │   ├── variables.tf
 │   │   ├── terraform.tfvars
-│   │   └── outputs.tf
 │   ├── staging/
-│   │   ├── main.tf
-│   │   ├── variables.tf
 │   │   ├── terraform.tfvars
-│   │   └── outputs.tf
 │   └── prod/
-│       ├── main.tf
-│       ├── variables.tf
 │       ├── terraform.tfvars
-│       └── outputs.tf
 ├── scripts/
 │   ├── deploy.sh
 │   ├── destroy.sh
@@ -128,10 +94,6 @@ modular-payment-terraform/
     ├── troubleshooting.md
     └── api_documentation.md
 ```
-## Cách chạy terraform theo từng môi trường: 
-terraform plan -var-file="environments/dev/terraform.tfvars"
-terraform apply -var-file="environments/staging/terraform.tfvars"
-terraform apply -var-file="environments/prod/terraform.tfvars"
 
 ## Mô tả các thành phần chính:
 
