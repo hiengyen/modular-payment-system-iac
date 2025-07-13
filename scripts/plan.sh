@@ -45,11 +45,14 @@ terraform plan -var-file="$TFVARS_FILE" -out="tfplan" | tee -a "$ORIGINAL_DIR/$L
 # Backup the plan file with timestamp
 cp tfplan "$ORIGINAL_DIR/$PLAN_FILE"
 
-# Show summary
+# # Show summary
 echo ""
 echo "📋 Summary of Plan:"
 terraform show tfplan | tee -a "$ORIGINAL_DIR/$LOG_FILE"
 
-echo ""
+# Save human-readable plan to text file
+TEXT_PLAN_FILE="$PLAN_FILE.txt"
+terraform show "$ORIGINAL_DIR/$PLAN_FILE" >"$TEXT_PLAN_FILE"
+echo "📘 Human-readable plan saved to: $TEXT_PLAN_FILE"
 echo "✅ Plan saved to: $PLAN_FILE"
 echo "📄 Log saved to: $LOG_FILE"
