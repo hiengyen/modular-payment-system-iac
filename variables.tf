@@ -66,6 +66,13 @@ variable "instance_class" {
   default     = "db.r6g.large"
 }
 
+variable "publicly_accessible" {
+  description = "Set to true if the RDS cluster instances should be publicly accessible"
+  type        = bool
+  default     = false
+}
+
+
 variable "lambda_policy_arn" {
   description = "ARN of the custom Lambda IAM policy"
   type        = string

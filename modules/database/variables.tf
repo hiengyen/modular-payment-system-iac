@@ -71,3 +71,9 @@ variable "skip_final_snapshot" {
   default     = false
 }
 
+variable "publicly_accessible" {
+  description = "Set to true if the RDS cluster instances should be publicly accessible"
+  type        = bool
+  default     = false
+}
+

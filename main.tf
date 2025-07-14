@@ -84,6 +84,7 @@ module "database" {
   lambda_sg_id               = module.security.lambda_sg_id
   db_master_username         = var.db_master_username
   skip_final_snapshot        = var.skip_final_snapshot
+  publicly_accessible        = var.publicly_accessible
   tags                       = local.common_tags
   aws_region                 = var.aws_region
 }

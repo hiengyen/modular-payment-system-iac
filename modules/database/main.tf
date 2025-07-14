@@ -20,13 +20,14 @@ resource "aws_rds_cluster" "aurora" {
 }
 
 resource "aws_rds_cluster_instance" "aurora_instance" {
-  count              = 1
-  identifier         = "${var.name_prefix}-aurora-instance-${count.index + 1}"
-  cluster_identifier = aws_rds_cluster.aurora.id
-  instance_class     = var.instance_class
-  engine             = aws_rds_cluster.aurora.engine
-  engine_version     = aws_rds_cluster.aurora.engine_version
-  tags               = var.tags
+  count               = 1
+  identifier          = "${var.name_prefix}-aurora-instance-${count.index + 1}"
+  cluster_identifier  = aws_rds_cluster.aurora.id
+  instance_class      = var.instance_class
+  engine              = aws_rds_cluster.aurora.engine
+  engine_version      = aws_rds_cluster.aurora.engine_version
+  publicly_accessible = var.publicly_accessible
+  tags                = var.tags
 }
 
 resource "aws_db_subnet_group" "main" {
@@ -44,6 +45,7 @@ resource "aws_security_group" "rds" {
     to_port         = 3306
     protocol        = "tcp"
     security_groups = [var.ecs_sg_id, var.lambda_sg_id]
+    cidr_blocks     = ["0.0.0.0/0"]
   }
 
   egress {

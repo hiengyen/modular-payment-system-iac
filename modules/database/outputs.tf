@@ -12,3 +12,7 @@ output "dynamodb_table_name" {
   description = "DynamoDB table name"
   value       = aws_dynamodb_table.main.name
 }
+
+output "aurora_endpoint" {
+  value = aws_rds_cluster.aurora.endpoint
+}
