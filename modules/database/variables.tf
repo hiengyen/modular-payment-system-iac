@@ -3,6 +3,12 @@ variable "name_prefix" {
   type        = string
 }
 
+variable "database_name" {
+  description = "Database name"
+  type        = string
+  default     = "modularpayment"
+}
+
 variable "tags" {
   description = "Tags to apply to resources"
   type        = map(string)
@@ -58,3 +64,10 @@ variable "lambda_sg_id" {
   description = "Lambda Security Group ID"
   type        = string
 }
+
+variable "skip_final_snapshot" {
+  description = "Whether to skip final snapshot when destroying the Aurora cluster"
+  type        = bool
+  default     = false
+}
+

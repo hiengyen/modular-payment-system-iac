@@ -4,7 +4,6 @@ provider "aws" {
 
 resource "aws_ecs_cluster" "main" {
   name = "${var.name_prefix}-ecs-cluster"
-
   tags = var.tags
 }
 
@@ -18,8 +17,8 @@ resource "aws_ecs_task_definition" "banking_api" {
 
   container_definitions = jsonencode([
     {
-      name  = "${var.name_prefix}-banking-api"
-      image = "${var.ecr_repository_url}:latest"
+      name      = "${var.name_prefix}-banking-api"
+      image     = "${var.ecr_repository_url}:latest"
       essential = true
       portMappings = [
         {
@@ -35,7 +34,6 @@ resource "aws_ecs_task_definition" "banking_api" {
       ]
     }
   ])
-
   tags = var.tags
 }
 
@@ -66,7 +64,7 @@ resource "aws_lb" "main" {
   internal           = false
   load_balancer_type = "application"
   security_groups    = var.security_group_ids
-  subnets           = var.public_subnet_ids
+  subnets            = var.public_subnet_ids
 
   tags = var.tags
 }

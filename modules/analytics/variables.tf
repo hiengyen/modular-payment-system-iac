@@ -3,6 +3,25 @@ variable "name_prefix" {
   type        = string
 }
 
+variable "database_name" {
+  description = "Database name"
+  type        = string
+  default     = "modularpayment"
+}
+
+variable "db_master_username" {
+  description = "Database master username"
+  type        = string
+  default     = "admin"
+}
+
+variable "db_master_password" {
+  description = "Database master password"
+  type        = string
+  sensitive   = true
+}
+
+
 variable "tags" {
   description = "Tags to apply to resources"
   type        = map(string)

@@ -3,22 +3,24 @@ provider "aws" {
 }
 
 resource "aws_rds_cluster" "aurora" {
-  cluster_identifier      = "${var.name_prefix}-aurora-cluster"
-  engine                  = "aurora-mysql"
-  engine_version          = "8.0.mysql_aurora.3.08.0"
-  database_name           = "${var.name_prefix}db"
-  master_username         = var.db_master_username
-  master_password         = var.db_master_password
-  backup_retention_period = var.backup_retention_period
-  deletion_protection     = var.enable_deletion_protection
-  db_subnet_group_name    = aws_db_subnet_group.main.name
-  vpc_security_group_ids  = [aws_security_group.rds.id]
-  preferred_backup_window = "07:00-09:00"
-  tags                    = var.tags
+  cluster_identifier        = "${var.name_prefix}-aurora-cluster"
+  engine                    = "aurora-mysql"
+  engine_version            = "8.0.mysql_aurora.3.08.0"
+  database_name             = "${var.database_name}db"
+  master_username           = var.db_master_username
+  master_password           = var.db_master_password
+  backup_retention_period   = var.backup_retention_period
+  deletion_protection       = var.enable_deletion_protection
+  db_subnet_group_name      = aws_db_subnet_group.main.name
+  vpc_security_group_ids    = [aws_security_group.rds.id]
+  preferred_backup_window   = "07:00-09:00"
+  skip_final_snapshot       = var.skip_final_snapshot
+  final_snapshot_identifier = "${var.name_prefix}-final-snapshot"
+  tags                      = var.tags
 }
 
 resource "aws_rds_cluster_instance" "aurora_instance" {
-  count              = 2
+  count              = 1
   identifier         = "${var.name_prefix}-aurora-instance-${count.index + 1}"
   cluster_identifier = aws_rds_cluster.aurora.id
   instance_class     = var.instance_class

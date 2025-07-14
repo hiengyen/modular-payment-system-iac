@@ -9,7 +9,8 @@ data "aws_availability_zones" "available" {
 
 # Local variables
 locals {
-  name_prefix = var.project_name
+  database_name = var.database_name
+  name_prefix   = var.project_name
   common_tags = {
     Project     = var.project_name
     Environment = var.environment
@@ -22,6 +23,7 @@ module "api_gateway" {
   source               = "./modules/api_gateway"
   name_prefix          = local.name_prefix
   cognito_user_pool_id = module.cognito.user_pool_id
+  ecs_alb_dns_name     = module.ecs.alb_dns_name
   ecs_target_group_arn = module.ecs.target_group_arn
   lambda_router_arn    = module.lambda.router_function_arn
   waf_acl_arn          = module.security.waf_acl_arn
@@ -70,6 +72,7 @@ module "s3" {
 # Database
 module "database" {
   source                     = "./modules/database"
+  database_name              = local.database_name
   name_prefix                = local.name_prefix
   ecs_sg_id                  = module.security.ecs_sg_id
   enable_deletion_protection = var.enable_deletion_protection
@@ -80,6 +83,7 @@ module "database" {
   db_master_password         = var.db_master_password
   lambda_sg_id               = module.security.lambda_sg_id
   db_master_username         = var.db_master_username
+  skip_final_snapshot        = var.skip_final_snapshot
   tags                       = local.common_tags
   aws_region                 = var.aws_region
 }
@@ -139,6 +143,8 @@ module "analytics" {
   s3_bucket_name      = module.s3.data_bucket_name
   aurora_endpoint     = module.database.aurora_cluster_endpoint
   dynamodb_table_name = module.database.dynamodb_table_name
+  db_master_username  = var.db_master_username
+  db_master_password  = var.db_master_password
   tags                = local.common_tags
   aws_region          = var.aws_region
 }

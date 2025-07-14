@@ -29,7 +29,7 @@ resource "aws_api_gateway_integration" "ecs" {
   http_method             = aws_api_gateway_method.proxy.http_method
   integration_http_method = "ANY"
   type                    = "HTTP_PROXY"
-  uri                     = "http://${var.ecs_target_group_arn}"
+  uri                     = "http://${var.ecs_alb_dns_name}/"
 }
 
 resource "aws_api_gateway_integration" "lambda" {

@@ -11,6 +11,12 @@ variable "project_name" {
   default     = "modular-payment-system"
 }
 
+variable "database_name" {
+  description = "Database name"
+  type        = string
+  default     = "modularpayment"
+}
+
 variable "environment" {
   description = "Environment name"
   type        = string
@@ -46,6 +52,13 @@ variable "backup_retention_period" {
   type        = number
   default     = 7
 }
+
+variable "skip_final_snapshot" {
+  description = "Whether to skip final snapshot when destroying the Aurora cluster"
+  type        = bool
+  default     = false
+}
+
 
 variable "instance_class" {
   description = "RDS instance class"

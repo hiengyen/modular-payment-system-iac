@@ -23,6 +23,12 @@ variable "ecs_target_group_arn" {
   type        = string
 }
 
+variable "ecs_alb_dns_name" {
+  description = "Public DNS name of ECS ALB"
+  type        = string
+}
+
+
 variable "lambda_router_arn" {
   description = "Lambda router function ARN"
   type        = string
