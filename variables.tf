@@ -72,7 +72,6 @@ variable "publicly_accessible" {
   default     = false
 }
 
-
 variable "lambda_policy_arn" {
   description = "ARN of the custom Lambda IAM policy"
   type        = string
