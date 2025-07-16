@@ -2,11 +2,33 @@ provider "aws" {
   region = var.aws_region
 }
 
+resource "aws_sagemaker_model" "main" {
+  name               = "${var.name_prefix}-sagemaker-model"
+  execution_role_arn = aws_iam_role.sagemaker_role.arn
+
+  primary_container {
+    # image = data.aws_sagemaker_prebuilt_ecr_image.agent.registry_path
+  }
+
+  tags = var.tags
+}
+
+resource "aws_iam_role" "sagemaker_role" {
+  name               = "${var.name_prefix}-sagemaker-role"
+  assume_role_policy = data.aws_iam_policy_document.sagemaker.json
+  tags               = var.tags
+}
+
+resource "aws_iam_role_policy" "sagemaker_policy" {
+  name   = "${var.name_prefix}-sagemaker-policy"
+  role   = aws_iam_role.sagemaker_role.id
+  policy = data.aws_iam_policy_document.sagemaker_policy.json
+}
+
 resource "aws_sagemaker_endpoint" "main" {
   name                 = "${var.name_prefix}-sagemaker-endpoint"
   endpoint_config_name = aws_sagemaker_endpoint_configuration.main.name
-
-  tags = var.tags
+  tags                 = var.tags
 }
 
 resource "aws_sagemaker_endpoint_configuration" "main" {
@@ -15,52 +37,9 @@ resource "aws_sagemaker_endpoint_configuration" "main" {
   production_variants {
     variant_name           = "main"
     model_name             = aws_sagemaker_model.main.name
-    instance_type          = "ml.t2.medium"
     initial_instance_count = 1
+    instance_type          = "ml.t2.medium"
   }
 
   tags = var.tags
-}
-
-resource "aws_sagemaker_model" "main" {
-  name               = "${var.name_prefix}-sagemaker-model"
-  execution_role_arn = aws_iam_role.sagemaker.arn
-
-  primary_container {
-    image = "${var.ecr_repository_url}:latest"
-  }
-
-  tags = var.tags
-}
-
-resource "aws_iam_role" "sagemaker" {
-  name = "${var.name_prefix}-sagemaker-role"
-
-  assume_role_policy = jsonencode({
-    Version = "2012-10-17"
-    Statement = [
-      {
-        Action = "sts:AssumeRole"
-        Effect = "Allow"
-        Principal = {
-          Service = "sagemaker.amazonaws.com"
-        }
-      }
-    ]
-  })
-
-  tags = var.tags
-}
-
-# │ Error: "policy" is an empty string, which is not a valid JSON value
-# │
-# │   with module.ai_ml.aws_iam_role_policy.sagemaker_policy,
-# │   on modules/ai_ml/main.tf line 58, in resource "aws_iam_role_policy" "sagemaker_policy":
-# │   58:   policy = file("${path.module}/../../policies/sagemaker_policy.json")
-# │
-
-resource "aws_iam_role_policy" "sagemaker_policy" {
-  name   = "${var.name_prefix}-sagemaker-policy"
-  role   = aws_iam_role.sagemaker.id
-  policy = file("${path.module}/../../policies/sagemaker_policy.json")
 }

@@ -34,13 +34,6 @@ variable "lambda_router_arn" {
   type        = string
 }
 
-resource "aws_lambda_permission" "api_gateway" {
-  statement_id  = "AllowAPIGatewayInvoke"
-  action        = "lambda:InvokeFunction"
-  function_name = var.lambda_router_arn
-  principal     = "apigateway.amazonaws.com"
-  source_arn    = "${aws_api_gateway_rest_api.main.execution_arn}/*/*"
-}
 variable "waf_acl_arn" {
   description = "WAF ACL ARN"
   type        = string

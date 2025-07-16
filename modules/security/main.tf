@@ -47,8 +47,44 @@ resource "aws_security_group" "lambda_sg" {
   )
 }
 
+# create a security group for SSM to allow access to EC2 instances
+resource "aws_security_group" "rds_sg" {
+  name        = "rds_sg"
+  description = "Allow database access"
+  vpc_id      = var.vpc_id
+
+}
+
+# Create a security group for SSM to allow access to EC2 instances
+resource "aws_security_group" "ec2_sg" {
+  name        = "ec2_sg"
+  description = "Allow EC2 instances to access SSM"
+  vpc_id      = var.vpc_id
+}
+
+# Tách rule ra để tránh vòng lặp
+resource "aws_security_group_rule" "rds_ingress_from_ec2" {
+  type                     = "ingress"
+  from_port                = 3306
+  to_port                  = 3306
+  protocol                 = "tcp"
+  security_group_id        = aws_security_group.rds_sg.id
+  source_security_group_id = aws_security_group.ec2_sg.id
+}
+
+resource "aws_security_group_rule" "ec2_egress_to_vpc" {
+  type              = "egress"
+  from_port         = 3306
+  to_port           = 3306
+  protocol          = "tcp"
+  cidr_blocks       = [var.vpc_cidr_block]
+  security_group_id = aws_security_group.ec2_sg.id
+}
+
+
 resource "aws_security_group" "sagemaker_sg" {
   name_prefix = "${var.name_prefix}-sagemaker-sg-"
+  description = "Security Group for SageMaker"
   vpc_id      = var.vpc_id
 
   egress {
@@ -65,6 +101,7 @@ resource "aws_security_group" "sagemaker_sg" {
     }
   )
 }
+
 
 resource "aws_wafv2_web_acl" "main" {
   name        = "${var.name_prefix}-waf-acl"

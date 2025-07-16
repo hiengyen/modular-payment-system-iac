@@ -65,6 +65,17 @@ variable "lambda_sg_id" {
   type        = string
 }
 
+variable "ec2_sg_id" {
+  description = "EC2 Security Group ID"
+  type        = string
+}
+
+variable "rds_sg_id" {
+  description = "RDS Security Group ID"
+  type        = string
+}
+
+
 variable "skip_final_snapshot" {
   description = "Whether to skip final snapshot when destroying the Aurora cluster"
   type        = bool

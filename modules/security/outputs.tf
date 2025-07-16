@@ -13,6 +13,17 @@ output "sagemaker_sg_id" {
   value       = aws_security_group.sagemaker_sg.id
 }
 
+
+output "rds_sg_id" {
+  description = "RDS Security Group ID"
+  value       = aws_security_group.rds_sg.id
+}
+
+output "ec2_sg_id" {
+  description = "EC2 Security Group ID"
+  value       = aws_security_group.ec2_sg.id
+}
+
 output "waf_acl_arn" {
   description = "WAF ACL ARN"
   value       = aws_wafv2_web_acl.main.arn

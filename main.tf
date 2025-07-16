@@ -45,11 +45,12 @@ module "vpc" {
 
 # Security
 module "security" {
-  source      = "./modules/security"
-  name_prefix = local.name_prefix
-  vpc_id      = module.vpc.vpc_id
-  tags        = local.common_tags
-  aws_region  = var.aws_region
+  source         = "./modules/security"
+  vpc_cidr_block = module.vpc.vpc_cidr_block
+  name_prefix    = local.name_prefix
+  vpc_id         = module.vpc.vpc_id
+  tags           = local.common_tags
+  aws_region     = var.aws_region
 }
 
 # Cognito
@@ -75,6 +76,8 @@ module "database" {
   database_name              = local.database_name
   name_prefix                = local.name_prefix
   ecs_sg_id                  = module.security.ecs_sg_id
+  ec2_sg_id                  = module.security.ec2_sg_id
+  rds_sg_id                  = module.security.rds_sg_id
   enable_deletion_protection = var.enable_deletion_protection
   private_subnet_ids         = module.vpc.private_subnet_ids
   backup_retention_period    = var.backup_retention_period
@@ -114,8 +117,7 @@ module "ecs" {
 
 # Lambda
 module "lambda" {
-  source = "./modules/lambda"
-
+  source              = "./modules/lambda"
   name_prefix         = local.name_prefix
   vpc_id              = module.vpc.vpc_id
   private_subnet_ids  = module.vpc.private_subnet_ids
