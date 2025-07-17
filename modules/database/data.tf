@@ -12,3 +12,5 @@ data "aws_ami" "amazon_linux_2" {
     values = ["hvm"]
   }
 }
+
+

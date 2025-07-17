@@ -23,3 +23,4 @@ resource "aws_ecr_repository" "langflow" {
 
   tags = var.tags
 }
+

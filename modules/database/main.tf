@@ -13,7 +13,7 @@ resource "aws_rds_cluster" "aurora" {
   backup_retention_period         = var.backup_retention_period
   deletion_protection             = var.enable_deletion_protection
   db_subnet_group_name            = aws_db_subnet_group.main.name
-  vpc_security_group_ids          = [aws_security_group.rds.id, aws_security_group.ssm.id, var.rds_sg_id, var.ec2_sg_id]
+  vpc_security_group_ids          = [aws_security_group.rds.id, aws_security_group.ssm.id]
   preferred_backup_window         = "07:00-09:00"
   skip_final_snapshot             = var.skip_final_snapshot
   final_snapshot_identifier       = "${var.name_prefix}-final-snapshot"
@@ -49,7 +49,7 @@ resource "aws_security_group" "rds" {
     from_port       = 3306
     to_port         = 3306
     protocol        = "tcp"
-    security_groups = [var.ecs_sg_id, var.lambda_sg_id, var.ec2_sg_id, aws_security_group.ssm.id]
+    security_groups = [var.ecs_sg_id, var.lambda_sg_id, aws_security_group.ssm.id]
     # cidr_blocks     = ["0.0.0.0/0"]
   }
 
@@ -126,6 +126,7 @@ resource "aws_instance" "ssm_host" {
   subnet_id            = var.private_subnet_ids[0]
   security_groups      = [aws_security_group.ssm.id]
   iam_instance_profile = aws_iam_instance_profile.ssm.name
+
 
   tags = merge(
     var.tags,

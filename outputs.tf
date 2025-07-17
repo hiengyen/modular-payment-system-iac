@@ -48,15 +48,15 @@ output "ecr_langflow_repository_url" {
   value       = module.ecr.langflow_repository_url
 }
 
-output "quicksight_dashboard_url" {
-  description = "QuickSight dashboard URL"
-  value       = module.analytics.quicksight_dashboard_url
-}
+# output "quicksight_dashboard_url" {
+#   description = "QuickSight dashboard URL"
+#   value       = module.analytics.quicksight_dashboard_url
+# }
 
-output "sagemaker_endpoint_name" {
-  description = "SageMaker endpoint name"
-  value       = module.ai_ml.sagemaker_endpoint_name
-}
+# output "sagemaker_endpoint_name" {
+#   description = "SageMaker endpoint name"
+#   value       = module.ai_ml.sagemaker_endpoint_name
+# }
 
 output "waf_acl_arn" {
   description = "WAF ACL ARN"

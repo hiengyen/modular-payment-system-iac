@@ -18,6 +18,11 @@ variable "cognito_user_pool_id" {
   type        = string
 }
 
+variable "lambda_router_invoke_arn" {
+  description = "Invoke ARN of the router Lambda function"
+  type        = string
+}
+
 variable "ecs_target_group_arn" {
   description = "ECS target group ARN"
   type        = string

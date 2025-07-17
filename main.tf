@@ -20,16 +20,17 @@ locals {
 
 # API Gateway
 module "api_gateway" {
-  source               = "./modules/api_gateway"
-  name_prefix          = local.name_prefix
-  cognito_user_pool_id = module.cognito.user_pool_id
-  ecs_alb_dns_name     = module.ecs.alb_dns_name
-  ecs_target_group_arn = module.ecs.target_group_arn
-  lambda_router_arn    = module.lambda.router_function_arn
-  waf_acl_arn          = module.security.waf_acl_arn
-  tags                 = local.common_tags
-  environment          = var.environment
-  aws_region           = var.aws_region
+  source                   = "./modules/api_gateway"
+  name_prefix              = local.name_prefix
+  cognito_user_pool_id     = module.cognito.user_pool_id
+  ecs_alb_dns_name         = module.ecs.alb_dns_name
+  ecs_target_group_arn     = module.ecs.target_group_arn
+  lambda_router_arn        = module.lambda.router_function_arn
+  lambda_router_invoke_arn = module.lambda.router_function_invoke_arn
+  waf_acl_arn              = module.security.waf_acl_arn
+  tags                     = local.common_tags
+  environment              = var.environment
+  aws_region               = var.aws_region
 }
 
 
@@ -93,6 +94,40 @@ module "database" {
 }
 
 
+module "iam_roles" {
+  source      = "./modules/iam_roles"
+  name_prefix = local.name_prefix
+  tags        = local.common_tags
+  aws_region  = var.aws_region
+}
+
+module "ecs" {
+  source             = "./modules/ecs"
+  name_prefix        = local.name_prefix
+  aws_region         = var.aws_region
+  tags               = local.common_tags
+  vpc_id             = module.vpc.vpc_id
+  private_subnet_ids = module.vpc.private_subnet_ids
+  public_subnet_ids  = module.vpc.public_subnet_ids
+  security_group_ids = [module.security.ecs_sg_id]
+  execution_role_arn = module.iam_roles.ecs_execution_role_arn
+  task_role_arn      = module.iam_roles.ecs_task_role_arn
+
+  banking_api_image = module.ecr.banking_api_repository_url
+  langflow_image    = module.ecr.langflow_repository_url
+
+  # banking_api_env_vars = [
+  #   { name = "ENV", value = "production" },
+  #   { name = "API_KEY", value = "your-api-key" }
+  # ]
+  #
+  # langflow_env_vars = [
+  #   { name = "ENV", value = "production" }
+  # ]
+}
+
+
+
 # ECR
 module "ecr" {
   source      = "./modules/ecr"
@@ -101,19 +136,6 @@ module "ecr" {
   aws_region  = var.aws_region
 }
 
-# ECS
-module "ecs" {
-  source             = "./modules/ecs"
-  name_prefix        = local.name_prefix
-  vpc_id             = module.vpc.vpc_id
-  public_subnet_ids  = module.vpc.public_subnet_ids
-  private_subnet_ids = module.vpc.private_subnet_ids
-  security_group_ids = [module.security.ecs_sg_id]
-  ecr_repository_url = module.ecr.banking_api_repository_url
-  aurora_endpoint    = module.database.aurora_cluster_endpoint
-  tags               = local.common_tags
-  aws_region         = var.aws_region
-}
 
 # Lambda
 module "lambda" {
@@ -153,19 +175,19 @@ module "analytics" {
   aws_region          = var.aws_region
 }
 
-# AI/ML
-module "ai_ml" {
-  source             = "./modules/ai_ml"
-  name_prefix        = local.name_prefix
-  vpc_id             = module.vpc.vpc_id
-  private_subnet_ids = module.vpc.private_subnet_ids
-  security_group_ids = [module.security.sagemaker_sg_id]
-  ecr_repository_url = module.ecr.langflow_repository_url
-  s3_bucket_name     = module.s3.data_bucket_name
-  sns_topic_arn      = module.messaging.sns_topic_arn
-  tags               = local.common_tags
-  aws_region         = var.aws_region
-}
+# # AI/ML
+# module "ai_ml" {
+#   source             = "./modules/ai_ml"
+#   name_prefix        = local.name_prefix
+#   vpc_id             = module.vpc.vpc_id
+#   private_subnet_ids = module.vpc.private_subnet_ids
+#   security_group_ids = [module.security.sagemaker_sg_id]
+#   ecr_repository_url = module.ecr.langflow_repository_url
+#   s3_bucket_name     = module.s3.data_bucket_name
+#   sns_topic_arn      = module.messaging.sns_topic_arn
+#   tags               = local.common_tags
+#   aws_region         = var.aws_region
+# }
 
 # Monitoring
 module "monitoring" {

@@ -17,41 +17,41 @@ resource "aws_kinesis_firehose_delivery_stream" "main" {
   tags = var.tags
 }
 
-resource "aws_quicksight_data_source" "main" {
-  data_source_id = "${var.name_prefix}-quicksight-datasource"
-  name           = "${var.name_prefix}-quicksight-datasource"
-
-  type = "AURORA"
-
-  parameters {
-    aurora {
-      host     = var.aurora_endpoint
-      port     = 3306
-      database = "${var.database_name}db"
-    }
-  }
-  credentials {
-    credential_pair {
-      username = var.db_master_username
-      password = var.db_master_password
-    }
-  }
-
-  permission {
-    principal = "arn:aws:quicksight:${var.aws_region}:${data.aws_caller_identity.current.account_id}:user/default/${var.name_prefix}-quicksight-user"
-
-    actions = [
-      "quicksight:DescribeDataSource",
-      "quicksight:DescribeDataSourcePermissions",
-      "quicksight:PassDataSource",
-      "quicksight:UpdateDataSource",
-      "quicksight:DeleteDataSource",
-      "quicksight:UpdateDataSourcePermissions"
-    ]
-  }
-
-  tags = var.tags
-}
+# resource "aws_quicksight_data_source" "main" {
+#   data_source_id = "${var.name_prefix}-quicksight-datasource"
+#   name           = "${var.name_prefix}-quicksight-datasource"
+#
+#   type = "AURORA"
+#
+#   parameters {
+#     aurora {
+#       host     = var.aurora_endpoint
+#       port     = 3306
+#       database = "${var.database_name}db"
+#     }
+#   }
+#   credentials {
+#     credential_pair {
+#       username = var.db_master_username
+#       password = var.db_master_password
+#     }
+#   }
+#
+#   permission {
+#     principal = "arn:aws:quicksight:${var.aws_region}:${data.aws_caller_identity.current.account_id}:user/default/${var.name_prefix}-quicksight-user"
+#
+#     actions = [
+#       "quicksight:DescribeDataSource",
+#       "quicksight:DescribeDataSourcePermissions",
+#       "quicksight:PassDataSource",
+#       "quicksight:UpdateDataSource",
+#       "quicksight:DeleteDataSource",
+#       "quicksight:UpdateDataSourcePermissions"
+#     ]
+#   }
+#
+#   tags = var.tags
+# }
 
 
 resource "aws_iam_role" "firehose" {

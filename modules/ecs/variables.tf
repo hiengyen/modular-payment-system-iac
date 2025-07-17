@@ -1,16 +1,16 @@
 variable "name_prefix" {
-  description = "Prefix for resource names"
   type        = string
-}
-
-variable "tags" {
-  description = "Tags to apply to resources"
-  type        = map(string)
+  description = "Prefix for ECS resources"
 }
 
 variable "aws_region" {
-  description = "AWS region"
   type        = string
+  description = "AWS region"
+}
+
+variable "tags" {
+  type        = map(string)
+  description = "Tags for resources"
 }
 
 variable "vpc_id" {
@@ -33,12 +33,39 @@ variable "security_group_ids" {
   type        = list(string)
 }
 
-variable "ecr_repository_url" {
-  description = "ECR repository URL"
+variable "execution_role_arn" {
   type        = string
+  description = "ECS execution role ARN"
 }
 
-variable "aurora_endpoint" {
-  description = "Aurora cluster endpoint"
+variable "task_role_arn" {
   type        = string
+  description = "ECS task role ARN"
 }
+
+variable "banking_api_image" {
+  type        = string
+  description = "Image URL for banking API"
+}
+
+variable "langflow_image" {
+  type        = string
+  description = "Image URL for langflow"
+}
+
+variable "banking_api_env_vars" {
+  type = list(object({
+    name  = string
+    value = string
+  }))
+  default = []
+}
+
+variable "langflow_env_vars" {
+  type = list(object({
+    name  = string
+    value = string
+  }))
+  default = []
+}
+
