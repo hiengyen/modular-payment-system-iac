@@ -1,141 +1,3 @@
-# Cấu trúc dự án Terraform - Modular Payment Architecture
-
-```
-modular-payment-terraform/
-├── README.md
-├── .gitignore
-├── terraform.tfvars.example
-├── versions.tf
-├── main.tf
-├── variables.tf
-├── outputs.tf
-├── modules/
-│   ├── vpc/
-│   │   ├── main.tf
-│   │   ├── variables.tf
-│   │   ├── outputs.tf
-│   ├── security/
-│   │   ├── main.tf
-│   │   ├── variables.tf
-│   │   ├── outputs.tf
-│   ├── cognito/
-│   │   ├── main.tf
-│   │   ├── variables.tf
-│   │   ├── outputs.tf
-│   ├── s3/
-│   │   ├── main.tf
-│   │   ├── variables.tf
-│   │   ├── outputs.tf
-│   ├── database/
-│   │   ├── main.tf
-│   │   ├── variables.tf
-│   │   ├── outputs.tf
-│   ├── ecr/
-│   │   ├── main.tf
-│   │   ├── variables.tf
-│   │   ├── outputs.tf
-│   ├── ecs/
-│   │   ├── main.tf
-│   │   ├── variables.tf
-│   │   ├── outputs.tf
-│   ├── lambda/
-│   │   ├── main.tf
-│   │   ├── variables.tf
-│   │   ├── outputs.tf
-│   │   ├── router_function.tf
-│   │   ├── processor_function.tf
-│   │   └── src/
-│   │       ├── router/
-│   │       │   ├── index.js
-│   │       │   └── package.json
-│   │       └── processor/
-│   │           ├── index.js
-│   │           └── package.json
-│   ├── api_gateway/
-│   │   ├── main.tf
-│   │   ├── variables.tf
-│   │   ├── outputs.tf
-│   ├── messaging/
-│   │   ├── main.tf
-│   │   ├── variables.tf
-│   │   ├── outputs.tf
-│   ├── analytics/
-│   │   ├── main.tf
-│   │   ├── variables.tf
-│   │   ├── outputs.tf
-│   ├── ai_ml/
-│   │   ├── main.tf
-│   │   ├── variables.tf
-│   │   ├── outputs.tf
-│   └── monitoring/
-│       ├── main.tf
-│       ├── variables.tf
-│       ├── outputs.tf
-├── environments/
-│   ├── dev/
-│   │   ├── terraform.tfvars
-│   ├── staging/
-│   │   ├── terraform.tfvars
-│   └── prod/
-│       ├── terraform.tfvars
-├── scripts/
-│   ├── deploy.sh
-│   ├── destroy.sh
-│   ├── plan.sh
-│   └── validate.sh
-├── policies/
-│   ├── ecs_task_policy.json
-│   ├── lambda_policy.json
-│   ├── sagemaker_policy.json
-│   └── firehose_policy.json
-└── docs/
-    ├── architecture.md
-    ├── deployment.md
-    ├── troubleshooting.md
-    └── api_documentation.md
-```
-
-## Mô tả các thành phần chính:
-
-### 1. Root Level Files
-- **main.tf**: File chính gọi các modules
-- **variables.tf**: Định nghĩa biến cho toàn bộ dự án
-- **outputs.tf**: Xuất các giá trị quan trọng
-- **versions.tf**: Terraform và provider versions
-
-### 2. Modules Directory
-Mỗi module có cấu trúc chuẩn:
-- **main.tf**: Logic chính của module
-- **variables.tf**: Input variables
-- **outputs.tf**: Output values
-
-### 3. Environments Directory
-Cấu hình riêng cho từng môi trường:
-- **dev/**: Môi trường development
-- **staging/**: Môi trường staging
-- **prod/**: Môi trường production
-
-### 4. Scripts Directory
-Các script tự động hóa:
-- **deploy.sh**: Script triển khai
-- **destroy.sh**: Script xóa infrastructure
-- **plan.sh**: Script xem kế hoạch thay đổi
-- **validate.sh**: Script kiểm tra cấu hình
-
-### 5. Policies Directory
-Các IAM policies JSON:
-- Policies cho ECS tasks
-- Policies cho Lambda functions
-- Policies cho SageMaker
-- Policies cho Firehose
-
-### 6. Documentation
-- **architecture.md**: Mô tả kiến trúc
-- **deployment.md**: Hướng dẫn triển khai
-- **troubleshooting.md**: Hướng dẫn xử lý lỗi
-- **api_documentation.md**: Tài liệu API
-
-
 ## Thứ tự triển khai:
 
 1. **Networking**: VPC, subnets, gateways
@@ -163,14 +25,66 @@ terraform apply -var-file="terraform.tfvars"
 # Xóa infrastructure
 terraform destroy -var-file="terraform.tfvars"
 ```
+---
+Hướng dẫn cách sử dụng các lệnh Terraform để xem trạng thái của các resource, đặc biệt là khi sử dụng cấu trúc `module`.
+---
+### 📦 1. Hiển thị toàn bộ Terraform state (bao gồm module con)
 
-## Best Practices:
+```bash
+terraform show
+```
 
-1. **State Management**: Sử dụng remote state (S3 + DynamoDB)
-2. **Environment Separation**: Workspace hoặc directories riêng biệt
-3. **Security**: Không commit sensitive data
-4. **Validation**: Sử dụng terraform validate và terraform fmt
-5. **Documentation**: Duy trì documentation cập nhật
-6. **CI/CD**: Tích hợp với pipeline CI/CD
-7. **Monitoring**: Thiết lập alerts và monitoring
-8. **Backup**: Backup state files và databases
+* Hiển thị toàn bộ thông tin trong Terraform state file.
+* Bao gồm tất cả các tài nguyên từ các `module`.
+---
+### 📋 2. Liệt kê tất cả resource trong state
+
+```bash
+terraform state list
+```
+
+* Liệt kê toàn bộ resource, bao gồm cả trong module, ví dụ:
+
+```
+module.vpc.aws_vpc.main
+module.lambda.aws_lambda_function.router
+module.api_gateway.aws_api_gateway_rest_api.main
+```
+---
+
+### 🔍 3. Xem chi tiết một resource cụ thể
+
+```bash
+terraform state show module.lambda.aws_lambda_function.router
+```
+* Hiển thị chi tiết thông tin về resource Lambda `router` trong module `lambda`.
+---
+
+### 📤 4. Xem output của Terraform
+
+```bash
+terraform output
+```
+* Hiển thị các giá trị được khai báo trong block `output`.
+
+```bash
+terraform output router_function_arn
+```
+---
+
+### 🔎 5. Tìm resource trong module theo tên
+
+Sử dụng grep để lọc resource từ `terraform state list`:
+
+```bash
+terraform state list | grep module.lambda
+```
+---
+
+## ✅ Note 
+
+* Đảm bảo `terraform apply` hoặc `terraform init` đã được chạy trước khi dùng các lệnh trên.
+* Luôn kiểm tra `terraform state list` khi không chắc chắn một module đã được apply chưa.
+---
+
+
