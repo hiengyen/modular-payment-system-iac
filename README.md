@@ -1,15 +1,3 @@
-## Thứ tự triển khai:
-
-1. **Networking**: VPC, subnets, gateways
-2. **Security**: Security groups, WAF, IAM roles
-3. **Storage**: S3 buckets, ECR repositories
-4. **Database**: Aurora cluster, DynamoDB
-5. **Compute**: ECS cluster, Lambda functions
-6. **Integration**: API Gateway, SQS, SNS
-7. **Analytics**: Kinesis Firehose, QuickSight
-8. **AI/ML**: SageMaker, Bedrock
-9. **Monitoring**: CloudWatch, dashboards
-
 ## Lệnh triển khai:
 
 ```bash
