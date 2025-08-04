@@ -1,78 +1,135 @@
-## Lệnh triển khai:
+## Architecture Diagram
+
+![System Architecture](images/modular_payment_system_architecture.png)
+
+---
+
+## Modular Payment System - IaC (Terraform)
+
+This repository provides a modular and extensible Infrastructure-as-Code (IaC) implementation using **Terraform** to provision a complete cloud-based payment system. It leverages AWS services, supports isolated modules, and promotes reusability and scalability.
+
+---
+
+## 📁 Directory Structure
+
+```text
+.
+├── docs/                     # Documentation assets
+├── images/                   # Architecture diagrams and related images
+├── modules/                  # Independent, reusable Terraform modules
+│   ├── analytics/            # Data analytics infrastructure (e.g., Kinesis, Athena)
+│   ├── api_gateway/          # API Gateway setup
+│   ├── cognito/              # User authentication and identity management
+│   ├── database/             # RDS or DynamoDB configurations
+│   ├── ecr/                  # Container registry configurations
+│   ├── ecs/                  # ECS cluster and Fargate services
+│   ├── iam_roles/            # IAM roles and policies
+│   ├── lambda/               # Lambda function infrastructure
+│   ├── messaging/            # SNS, SQS, and EventBridge configuration
+│   ├── monitoring/           # CloudWatch, alarms, logs
+│   ├── s3/                   # Object storage configuration
+│   ├── security/             # Security groups, WAF, KMS
+│   └── vpc/                  # VPC, subnets, routing, NAT, etc.
+├── policies/                 # Predefined IAM JSON policy documents
+├── scripts/                  # Shell scripts to simplify Terraform workflows
+├── main.tf                   # Entry point for the root Terraform configuration
+├── outputs.tf                # Global output values
+├── terraform.tfvars.example  # Example variables file
+├── tfplan                    # Cached Terraform plan (optional)
+├── variables.tf              # Global input variables
+├── version.tf                # Required Terraform and provider versions
+└── README.md                 # Project documentation (this file)
+```
+
+---
+
+## 💪 Prerequisites
+
+* [Terraform v1.3+](https://www.terraform.io/downloads)
+* AWS CLI configured (`aws configure`)
+* Proper AWS IAM permissions to create resources (admin or scoped)
+
+---
+
+## 🚀 Getting Started
+
+### 1. Clone the repository
 
 ```bash
-# Khởi tạo Terraform
+git clone https://github.com/hiengyen/modular-payment-system-iac.git 
+cd modular-payment-system-iac
+```
+
+### 2. Customize Variables
+
+Create a `terraform.tfvars` file based on the provided example:
+
+```bash
+cp terraform.tfvars.example terraform.tfvars
+```
+
+Edit `terraform.tfvars` to suit your environment and configuration.
+
+---
+
+### 3. Initialize Terraform
+
+```bash
 terraform init
+```
 
-# Xem kế hoạch thay đổi
+### 4. Preview Plan
+
+```bash
 terraform plan -var-file="terraform.tfvars"
+```
 
-# Triển khai
+### 5. Deploy Infrastructure
+
+```bash
 terraform apply -var-file="terraform.tfvars"
+```
 
-# Xóa infrastructure
+### 6. Destroy Infrastructure
+
+```bash
 terraform destroy -var-file="terraform.tfvars"
 ```
+
 ---
-Hướng dẫn cách sử dụng các lệnh Terraform để xem trạng thái của các resource, đặc biệt là khi sử dụng cấu trúc `module`.
----
-### 📦 1. Hiển thị toàn bộ Terraform state (bao gồm module con)
+
+## 🔍 State Management & Resource Inspection
+
+View state:
 
 ```bash
 terraform show
 ```
 
-* Hiển thị toàn bộ thông tin trong Terraform state file.
-* Bao gồm tất cả các tài nguyên từ các `module`.
----
-### 📋 2. Liệt kê tất cả resource trong state
+List all resources:
 
 ```bash
 terraform state list
 ```
 
-* Liệt kê toàn bộ resource, bao gồm cả trong module, ví dụ:
-
-```
-module.vpc.aws_vpc.main
-module.lambda.aws_lambda_function.router
-module.api_gateway.aws_api_gateway_rest_api.main
-```
----
-
-### 🔍 3. Xem chi tiết một resource cụ thể
+View specific resource:
 
 ```bash
 terraform state show module.lambda.aws_lambda_function.router
 ```
-* Hiển thị chi tiết thông tin về resource Lambda `router` trong module `lambda`.
+
 ---
 
-### 📤 4. Xem output của Terraform
+## 📤 Terraform Outputs
+
+To inspect output values (e.g., API Gateway URL, Lambda ARN):
 
 ```bash
 terraform output
+terraform output api_gateway_url
 ```
-* Hiển thị các giá trị được khai báo trong block `output`.
 
-```bash
-terraform output router_function_arn
-```
 ---
 
-### 🔎 5. Tìm resource trong module theo tên
-
-Sử dụng grep để lọc resource từ `terraform state list`:
-
-```bash
-terraform state list | grep module.lambda
-```
----
-
-## ✅ Note 
-
-* Đảm bảo `terraform apply` hoặc `terraform init` đã được chạy trước khi dùng các lệnh trên.
-* Luôn kiểm tra `terraform state list` khi không chắc chắn một module đã được apply chưa.
----
 
 
