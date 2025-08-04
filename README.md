@@ -10,7 +10,7 @@ This repository provides a modular and extensible Infrastructure-as-Code (IaC) i
 
 ---
 
-## 📁 Directory Structure
+## Directory Structure
 
 ```text
 .
@@ -43,7 +43,7 @@ This repository provides a modular and extensible Infrastructure-as-Code (IaC) i
 
 ---
 
-## 💪 Prerequisites
+## Prerequisites
 
 * [Terraform v1.3+](https://www.terraform.io/downloads)
 * AWS CLI configured (`aws configure`)
@@ -51,7 +51,7 @@ This repository provides a modular and extensible Infrastructure-as-Code (IaC) i
 
 ---
 
-## 🚀 Getting Started
+## Getting Started
 
 ### 1. Clone the repository
 
@@ -98,7 +98,7 @@ terraform destroy -var-file="terraform.tfvars"
 
 ---
 
-## 🔍 State Management & Resource Inspection
+## State Management & Resource Inspection
 
 View state:
 
@@ -120,7 +120,7 @@ terraform state show module.lambda.aws_lambda_function.router
 
 ---
 
-## 📤 Terraform Outputs
+## Terraform Outputs
 
 To inspect output values (e.g., API Gateway URL, Lambda ARN):
 
